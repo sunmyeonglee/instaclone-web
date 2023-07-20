@@ -2,7 +2,7 @@ import { createGlobalStyle } from "styled-components";
 import reset from "styled-reset";
 
 export const lightTheme = {
-  accent: "#fafafa",
+  accent: "#0095f6",
   borderColor: "#rgb(219,219,219)",
 };
 
