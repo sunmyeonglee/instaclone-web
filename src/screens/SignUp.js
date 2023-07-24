@@ -9,6 +9,8 @@ import Button from "../components/auth/Button";
 import Separator from "../components/auth/Separator";
 import Input from "../components/auth/Input";
 import { styled } from "styled-components";
+import { HelmetProvider } from "react-helmet-async";
+import PageTitle from "../components/PageTitle";
 
 const HeaderContainer = styled.div`
   display: flex;
@@ -36,30 +38,37 @@ const Info = styled.div`
 
 const SignUp = () => {
   return (
-    <AuthLayout>
-      <FormBox>
-        <HeaderContainer>
-          <FontAwesomeIcon icon={faInstagram} size="3x" />
-          <Subtitle>
-            Sign up to see photos and videos from your friends.
-          </Subtitle>
-        </HeaderContainer>
-        <form>
-          <Button type="submit" value="Log in with Facebook" />
-          <Separator />
-          <Input type="text" placeholder="Mobile Number or Email" />
-          <Input type="text" placeholder="Full Name" />
-          <Input type="text" placeholder="Username" />
-          <Input type="password" placeholder="Password" />
-          <Info>
-            People who use our service may have uploaded your contact
-            information to Instagram. Learn more
-          </Info>
-          <Button type="submit" value="Sign up" />
-        </form>
-      </FormBox>
-      <BottomBox cta="Have an account?" link={routes.home} linkText="Log in" />
-    </AuthLayout>
+    <HelmetProvider>
+      <AuthLayout>
+        <PageTitle title={"Sign Up"} />
+        <FormBox>
+          <HeaderContainer>
+            <FontAwesomeIcon icon={faInstagram} size="3x" />
+            <Subtitle>
+              Sign up to see photos and videos from your friends.
+            </Subtitle>
+          </HeaderContainer>
+          <form>
+            <Button type="submit" value="Log in with Facebook" />
+            <Separator />
+            <Input type="text" placeholder="Mobile Number or Email" />
+            <Input type="text" placeholder="Full Name" />
+            <Input type="text" placeholder="Username" />
+            <Input type="password" placeholder="Password" />
+            <Info>
+              People who use our service may have uploaded your contact
+              information to Instagram. Learn more
+            </Info>
+            <Button type="submit" value="Sign up" />
+          </form>
+        </FormBox>
+        <BottomBox
+          cta="Have an account?"
+          link={routes.home}
+          linkText="Log in"
+        />
+      </AuthLayout>
+    </HelmetProvider>
   );
 };
 
