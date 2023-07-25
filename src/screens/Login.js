@@ -19,6 +19,7 @@ import BottomBox from "../components/auth/BottomBox";
 import PageTitle from "../components/PageTitle";
 import FormError from "../components/auth/FormError";
 import { logUserIn } from "../apollo";
+import { useLocation } from "react-router-dom/cjs/react-router-dom.min";
 
 const FacebookLogin = styled.div`
   color: #385285;
@@ -26,6 +27,10 @@ const FacebookLogin = styled.div`
     margin-left: 10px;
     font-weight: 600;
   }
+`;
+
+const Notification = styled.div`
+  color: #2ecc71;
 `;
 
 const LOGIN_MUTATION = gql`
@@ -39,6 +44,7 @@ const LOGIN_MUTATION = gql`
 `;
 
 const Login = () => {
+  const location = useLocation();
   const {
     register,
     handleSubmit,
@@ -48,6 +54,10 @@ const Login = () => {
     clearErrors,
   } = useForm({
     mode: "onChange",
+    defaultValues: {
+      username: location?.state?.username || "",
+      password: location?.state?.password || "",
+    },
   });
 
   const onCompleted = (data) => {
@@ -88,6 +98,7 @@ const Login = () => {
           <div>
             <FontAwesomeIcon icon={faInstagram} size="3x" />
           </div>
+          <Notification>{location?.state?.message}</Notification>
           <form onSubmit={handleSubmit(onSubmitValid)}>
             <Input
               {...register("username", {
