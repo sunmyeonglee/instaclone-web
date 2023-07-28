@@ -5,8 +5,9 @@ import {
   createHttpLink,
   makeVar,
 } from "@apollo/client";
+import { setContext } from "@apollo/client/link/context";
 
-const TOKEN = "token";
+const TOKEN = "TOKEN";
 const DARK_MODE = "DARK_MODE";
 
 export const isLoggedInVar = makeVar(Boolean(localStorage.getItem(TOKEN)));
@@ -31,9 +32,7 @@ export const disableDarkMode = () => {
   darkModeVar(false);
 };
 
-const httpLink = createHttpLink({
-  uri: "http://localhost:4000/graphql",
-});
+const httpLink = createHttpLink({ uri: "http://localhost:4000/graphql" });
 
 const authLink = new ApolloLink((operation, forward) => {
   operation.setContext((context) => ({
@@ -48,4 +47,5 @@ const authLink = new ApolloLink((operation, forward) => {
 export const client = new ApolloClient({
   link: authLink.concat(httpLink),
   cache: new InMemoryCache(),
+  connectToDevTools: true,
 });
