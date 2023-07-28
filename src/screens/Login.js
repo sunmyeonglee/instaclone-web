@@ -111,7 +111,7 @@ const Login = () => {
               onFocus={clearLoginError}
               type="text"
               placeholder="Username"
-              hasError={Boolean(errors?.username?.message)}
+              $hasError={Boolean(errors?.username?.message)}
             />
             <FormError message={errors?.username?.message} />
             <Input
@@ -122,7 +122,7 @@ const Login = () => {
               onFocus={clearLoginError}
               type="password"
               placeholder="Password"
-              hasError={Boolean(errors?.password?.message)}
+              $hasError={Boolean(errors?.password?.message)}
             />
             <FormError message={errors?.password?.message} />
             <Button
