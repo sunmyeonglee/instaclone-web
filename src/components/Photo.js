@@ -11,6 +11,7 @@ import PropTypes from "prop-types";
 import styled from "styled-components";
 import Avatar from "./Avatar";
 import { FatText } from "./shared";
+import { FEED_QUERY } from "../screens/Home";
 
 Photo.propTypes = {
   id: PropTypes.number.isRequired,
@@ -87,6 +88,7 @@ function Photo({ id, user, file, isLiked, likes }) {
     variables: {
       id,
     },
+    refetchQueries: [{ query: FEED_QUERY }],
   });
   return (
     <PhotoContainer key={id}>
