@@ -9,20 +9,9 @@ import { faHeart as SolidHeart } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import PropTypes from "prop-types";
 import styled from "styled-components";
-import Avatar from "./Avatar";
-import { FatText } from "./shared";
-import { FEED_QUERY } from "../screens/Home";
-
-Photo.propTypes = {
-  id: PropTypes.number.isRequired,
-  user: PropTypes.shape({
-    avatar: PropTypes.string,
-    username: PropTypes.string.isRequired,
-  }),
-  file: PropTypes.string.isRequired,
-  isLiked: PropTypes.bool.isRequired,
-  likes: PropTypes.number.isRequired,
-};
+import Avatar from "../Avatar";
+import { FatText } from "../shared";
+import Comments from "./Comments";
 
 const TOGGLE_LIKE_MUTATION = gql`
   mutation toggleLike($id: Int!) {
@@ -79,11 +68,19 @@ const PhotoAction = styled.div`
 `;
 
 const Likes = styled(FatText)`
-  margin-top: 15px;
+  margin-top: 12px;
   display: block;
 `;
-
-function Photo({ id, user, file, isLiked, likes }) {
+function Photo({
+  id,
+  user,
+  file,
+  isLiked,
+  likes,
+  caption,
+  commentNumber,
+  comments,
+}) {
   const updateToggleLike = (cache, result) => {
     const {
       data: {
@@ -150,9 +147,28 @@ function Photo({ id, user, file, isLiked, likes }) {
           </div>
         </PhotoActions>
         <Likes>{likes === 1 ? "1 like" : `${likes} likes`}</Likes>
+        <Comments
+          author={user.username}
+          caption={caption}
+          commentNumber={commentNumber}
+          comments={comments}
+        />
       </PhotoData>
     </PhotoContainer>
   );
 }
+
+Photo.propTypes = {
+  id: PropTypes.number.isRequired,
+  user: PropTypes.shape({
+    avatar: PropTypes.string,
+    username: PropTypes.string.isRequired,
+  }),
+  caption: PropTypes.string,
+  file: PropTypes.string.isRequired,
+  isLiked: PropTypes.bool.isRequired,
+  likes: PropTypes.number.isRequired,
+  commentNumber: PropTypes.number.isRequired,
+};
 
 export default Photo;
