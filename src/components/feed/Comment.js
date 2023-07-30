@@ -5,7 +5,9 @@ import sanitizeHtml from "sanitize-html";
 import { Link } from "react-router-dom/cjs/react-router-dom.min";
 import React from "react";
 
-const CommentContainer = styled.div``;
+const CommentContainer = styled.div`
+  margin-bottom: 7px;
+`;
 
 const CommentCaption = styled.span`
   margin-left: 4px;

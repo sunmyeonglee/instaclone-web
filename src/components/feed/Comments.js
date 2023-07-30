@@ -27,6 +27,20 @@ const CommentCount = styled.span`
   font-weight: 600;
 `;
 
+const PostCommentContainer = styled.div`
+  margin-top: 10px;
+  padding-top: 15px;
+  padding-bottom: 10px;
+  border-top: 1px solid ${(props) => props.theme.borderColor};
+`;
+
+const PostCommentInput = styled.input`
+  width: 100%;
+  &::placeholder {
+    font-size: 12px;
+  }
+`;
+
 const Comments = ({ photoId, author, caption, commentNumber, comments }) => {
   const { data: userData } = useUser();
   const { register, handleSubmit, setValue, getValues } = useForm();
@@ -49,11 +63,27 @@ const Comments = ({ photoId, author, caption, commentNumber, comments }) => {
           ...userData.me,
         },
       };
+      const newCacheComment = cache.writeFragment({
+        data: newComment,
+        fragment: gql`
+          fragment AnyName on Comment {
+            id
+            createdAt
+            isMine
+            payload
+            user {
+              username
+              avatar
+            }
+          }
+        `,
+      });
+
       cache.modify({
         id: `Photo:${photoId}`,
         fields: {
           comments(prev) {
-            return [...prev, newComment];
+            return [...prev, newCacheComment];
           },
           commentNumber(prev) {
             return prev + 1;
@@ -95,15 +125,15 @@ const Comments = ({ photoId, author, caption, commentNumber, comments }) => {
           payload={comment.payload}
         />
       ))}
-      <div>
+      <PostCommentContainer>
         <form onSubmit={handleSubmit(onValid)}>
-          <input
+          <PostCommentInput
             type="text"
             placeholder="Write a comment..."
             {...register("payload", { required: true })}
           />
         </form>
-      </div>
+      </PostCommentContainer>
     </CommentsContainer>
   );
 };
