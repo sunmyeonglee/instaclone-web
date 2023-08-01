@@ -7,7 +7,8 @@ import { FatText } from "../components/shared";
 import { PHOTO_FRAGMENT } from "../fragments";
 import Button from "../components/auth/Button";
 import PageTitle from "../components/PageTitle";
-import useUser, { ME_QUERY } from "../hooks/useUser";
+import useUser from "../hooks/useUser";
+import { client } from "../apollo";
 
 const FOLLOW_USER_MUTATION = gql`
   mutation followUser($username: String!) {
@@ -135,24 +136,59 @@ function Profile() {
     },
   });
 
+  const unFollowUserUpdate = (cache, result) => {
+    const {
+      data: {
+        unfollowUser: { ok },
+      },
+    } = result;
+    if (!ok) {
+      return;
+    }
+    cache.modify({
+      id: `User:${username}`,
+      fields: {
+        isFollowing(prev) {
+          return false;
+        },
+        totalFollowers(prev) {
+          return prev - 1;
+        },
+      },
+    });
+  };
   const [unfollowUser] = useMutation(UNFOLLOW_USER_MUTATION, {
     variables: {
       username,
     },
-    refetchQueries: [
-      { query: SEE_PROFILE_QUERY, variables: { username } },
-      { query: ME_QUERY },
-    ],
+    update: unFollowUserUpdate,
   });
 
+  const followUserCompleted = (data) => {
+    const {
+      followUser: { ok },
+    } = data;
+    if (!ok) {
+      return;
+    }
+    const { cache } = client;
+    cache.modify({
+      id: `User:${username}`,
+      fields: {
+        isFollowing(prev) {
+          return true;
+        },
+        totalFollowers(prev) {
+          return prev + 1;
+        },
+      },
+    });
+  };
   const [followUser] = useMutation(FOLLOW_USER_MUTATION, {
     variables: {
       username,
     },
-    refetchQueries: [
-      { query: SEE_PROFILE_QUERY, variables: { username } },
-      { query: ME_QUERY },
-    ],
+    onCompleted: followUserCompleted,
   });
 
   const getButton = (seeProfile) => {
