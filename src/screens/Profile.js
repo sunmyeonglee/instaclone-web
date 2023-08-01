@@ -1,4 +1,4 @@
-import { gql, useQuery } from "@apollo/client";
+import { gql, useMutation, useQuery } from "@apollo/client";
 import { faHeart, faComment } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useParams } from "react-router-dom";
@@ -7,6 +7,7 @@ import { FatText } from "../components/shared";
 import { PHOTO_FRAGMENT } from "../fragments";
 import Button from "../components/auth/Button";
 import PageTitle from "../components/PageTitle";
+import useUser, { ME_QUERY } from "../hooks/useUser";
 
 const FOLLOW_USER_MUTATION = gql`
   mutation followUser($username: String!) {
@@ -127,20 +128,42 @@ const ProfileBtn = styled(Button).attrs({
 
 function Profile() {
   const { username } = useParams();
+  const { data: userData } = useUser();
   const { data, loading } = useQuery(SEE_PROFILE_QUERY, {
     variables: {
       username,
     },
   });
+
+  const [unfollowUser] = useMutation(UNFOLLOW_USER_MUTATION, {
+    variables: {
+      username,
+    },
+    refetchQueries: [
+      { query: SEE_PROFILE_QUERY, variables: { username } },
+      { query: ME_QUERY },
+    ],
+  });
+
+  const [followUser] = useMutation(FOLLOW_USER_MUTATION, {
+    variables: {
+      username,
+    },
+    refetchQueries: [
+      { query: SEE_PROFILE_QUERY, variables: { username } },
+      { query: ME_QUERY },
+    ],
+  });
+
   const getButton = (seeProfile) => {
     const { isMe, isFollowing } = seeProfile;
     if (isMe) {
       return <ProfileBtn>Edit Profile</ProfileBtn>;
     }
     if (isFollowing) {
-      return <ProfileBtn>Unfollow</ProfileBtn>;
+      return <ProfileBtn onClick={unfollowUser}>Unfollow</ProfileBtn>;
     } else {
-      return <ProfileBtn>Follow</ProfileBtn>;
+      return <ProfileBtn onClick={followUser}>Follow</ProfileBtn>;
     }
   };
   return (
