@@ -125,6 +125,7 @@ const ProfileBtn = styled(Button).attrs({
 })`
   margin-left: 10px;
   margin-top: 0px;
+  padding: 10px 10px 10px 10px;
 `;
 
 function Profile() {
