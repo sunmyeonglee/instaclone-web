@@ -5,7 +5,6 @@ import {
   createHttpLink,
   makeVar,
 } from "@apollo/client";
-import { setContext } from "@apollo/client/link/context";
 
 const TOKEN = "TOKEN";
 const DARK_MODE = "DARK_MODE";
@@ -46,6 +45,12 @@ const authLink = new ApolloLink((operation, forward) => {
 
 export const client = new ApolloClient({
   link: authLink.concat(httpLink),
-  cache: new InMemoryCache(),
+  cache: new InMemoryCache({
+    typePolicies: {
+      User: {
+        keyFields: (obj) => `User:${obj.username}`,
+      },
+    },
+  }),
   connectToDevTools: true,
 });
