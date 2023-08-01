@@ -68,7 +68,7 @@ const Grid = styled.div`
 `;
 
 const Photo = styled.div`
-  background-image: url(${(props) => props.bg});
+  background-image: url(${(props) => props.$bg});
   background-size: cover;
   position: relative;
 `;
@@ -140,7 +140,7 @@ function Profile() {
       </Header>
       <Grid>
         {data?.seeProfile?.photos.map((photo) => (
-          <Photo key="photoKey" bg={photo.file}>
+          <Photo key="photoKey" $bg={photo.file}>
             <Icons>
               <Icon>
                 <FontAwesomeIcon icon={faHeart} />
